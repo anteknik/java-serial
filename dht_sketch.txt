@@ -1,0 +1,44 @@
+#include "DHT.h" // Library DHT11
+
+#define DHTPIN 7 //PIN DHT
+#define DHTTYPE DHT11
+
+#define MERAH 4   //PIN LED
+#define HIJAU 14
+  
+DHT dht(DHTPIN, DHTTYPE); 
+
+unsigned long previousMillis = 0; //Timer
+const long interval = 2000; //2 detik
+
+
+void setup() {
+pinMode(MERAH, OUTPUT);
+pinMode(HIJAU, OUTPUT);
+Serial.begin(9600); //serial ke usb com
+dht.begin();
+
+}
+
+void loop() {
+
+  unsigned long currentMillis = millis();
+  //cek timer 
+  if(currentMillis - previousMillis >= interval) {
+  previousMillis = currentMillis;  
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+ 
+  // cek pembacaan dht benar
+  if (isnan(h) || isnan(t)) {
+    Serial.println(F("Failed to read from DHT sensor!"));
+  }
+  else{
+    
+   //lempar langsung ke serial
+   Serial.println( String(t) + ","+ String(h) );
+    }
+
+  }
+
+}
